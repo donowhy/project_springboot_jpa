@@ -5,9 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.domain.posts.Posts;
 import project.domain.posts.PostsRepository;
+import project.web.dto.PostsListResponseDto;
 import project.web.dto.PostsResponseDto;
 import project.web.dto.PostsSaveRequestDto;
 import project.web.dto.PostsUpdateRequestDto;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +37,20 @@ public class PostsService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + id ));
 
         return new PostsResponseDto(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostsListResponseDto> findAllDesc() {
+        return postsRepository.findAllDesc().stream()
+                .map(PostsListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void delete (Long id){
+        Posts posts = postsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+
+        postsRepository.delete(posts);
     }
 }
