@@ -10,7 +10,6 @@ var main = {
         $('#btn-update').on('click', function() {
             _this.update();
         });
-
     },
     save : function () {
         var data = {
